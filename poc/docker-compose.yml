@@ -1,0 +1,43 @@
+# Levanta el PoC sin instalar Go ni Locust.
+#
+#   docker compose up -d --build                         # blackbox + api (baseline)
+#   API_FLAGS="-initial 1 -copies 2 -hedge-pct 95 -budget 0.1" docker compose up -d api
+#   docker compose run --rm loadgen                      # 150 req/s, 40 s, open-loop
+#   docker compose --profile locust run --rm locust      # validacion con Locust
+#
+# Estrategias en API_FLAGS (ver cmd/api/main.go):
+#   baseline            -initial 1 -copies 1
+#   Modo A (hedged p95) -initial 1 -copies 2 -hedge-pct 95 -budget 0.1
+#   Modo B (double)     -initial 2 -copies 2
+#   propuesta           -initial 2 -copies 3 -hedge-pct 95 -budget 2.0
+# Para tratar S10 como accion (nunca se duplica) se agrega -actions S10.
+
+services:
+  blackbox:
+    build: .
+    command: ["blackbox", "-profile", "spec", "-scenario", "${SCENARIO:-request}", "-seed", "${SEED:-1001}"]
+
+  api:
+    build: .
+    depends_on: [blackbox]
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["exec api -services-host http://blackbox -actions '${ACTIONS:-}' ${API_FLAGS:--initial 1 -copies 1}"]
+    ports: ["8080:8080"]
+
+  loadgen:
+    build: .
+    profiles: ["tools"]
+    depends_on: [api]
+    volumes: ["./results:/results"]
+    command: ["loadgen", "-url", "http://api:8080/aggregate", "-rps", "${RPS:-150}",
+              "-duration", "${DURATION:-40s}", "-warmup", "10s",
+              "-summary", "/results/docker_${LABEL:-run}.json", "-label", "${LABEL:-run}"]
+
+  locust:
+    image: locustio/locust:2.31.8
+    profiles: ["locust"]
+    depends_on: [api]
+    volumes: ["./locust:/mnt/locust", "./results:/mnt/results"]
+    environment: ["TAIL_ENDPOINT=aggregate"]
+    command: ["-f", "/mnt/locust/locustfile.py", "--headless", "-u", "150", "-r", "150", "-t", "40s",
+              "--host", "http://api:8080", "--csv", "/mnt/results/locust_${LABEL:-run}", "--only-summary"]

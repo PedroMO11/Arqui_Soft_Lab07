@@ -1,0 +1,101 @@
+{
+  "label": "E_hedged-p95-b10_r3",
+  "url": "http://127.0.0.1:8080/aggregate",
+  "target_rps": 150,
+  "achieved_rps": 150,
+  "requests": 6000,
+  "ok": 6000,
+  "errors": 0,
+  "p50_ms": 30.08,
+  "p90_ms": 1152.11,
+  "p95_ms": 1269.23,
+  "p99_ms": 1407.89,
+  "p999_ms": 1481.03,
+  "max_ms": 1496.216,
+  "mean_ms": 238.4,
+  "downstream_calls": 63805,
+  "hedges": 3805,
+  "hedge_wins": 484,
+  "calls_per_request": 10.63,
+  "load_multiplier": 1.06,
+  "slow_over_100ms_pct": 18.47,
+  "scenario": "E",
+  "config": "hedged-p95-b10",
+  "rep": 3,
+  "seed": 1003,
+  "blackbox_received_total": 78950,
+  "blackbox": {
+    "S1": {
+      "cancelled": 293,
+      "received": 7794,
+      "served": 7501,
+      "slow": 0
+    },
+    "S10": {
+      "cancelled": 308,
+      "received": 7809,
+      "served": 7501,
+      "slow": 0
+    },
+    "S2": {
+      "cancelled": 312,
+      "received": 7813,
+      "served": 7501,
+      "slow": 0
+    },
+    "S3": {
+      "cancelled": 326,
+      "received": 7828,
+      "served": 7502,
+      "slow": 0
+    },
+    "S4": {
+      "cancelled": 293,
+      "received": 7794,
+      "served": 7501,
+      "slow": 0
+    },
+    "S5": {
+      "cancelled": 306,
+      "received": 7808,
+      "served": 7502,
+      "slow": 0
+    },
+    "S6": {
+      "cancelled": 303,
+      "received": 7805,
+      "served": 7502,
+      "slow": 0
+    },
+    "S7": {
+      "cancelled": 996,
+      "received": 8500,
+      "served": 7504,
+      "slow": 1749
+    },
+    "S8": {
+      "cancelled": 476,
+      "received": 7978,
+      "served": 7502,
+      "slow": 446
+    },
+    "S9": {
+      "cancelled": 320,
+      "received": 7821,
+      "served": 7501,
+      "slow": 0
+    }
+  },
+  "hedge_delay_ms": {
+    "S1": 29.673,
+    "S10": 29.143,
+    "S2": 29.337,
+    "S3": 29.599,
+    "S4": 29.261,
+    "S5": 29.572,
+    "S6": 29.102,
+    "S7": 29.517,
+    "S8": 29.577,
+    "S9": 29.534
+  }
+}

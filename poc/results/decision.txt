@@ -1,0 +1,16 @@
+GO WITH CHANGES
+
+Se implementa double+hedge-p95 en los 10 servicios de lectura.
+Escenario R, 18 000 requests en 3 repeticiones
+p99 1.47 s → 41 ms y p99.9 1.50 s → 64 ms, con carga x2.05
+dentro del límite de 3x. Ninguna request pasó de 100 ms (baseline 18%).
+
+Condiciones del GO
+1. Una acción no idempotente no se duplica. Si S10 fuera acción
+   (escenario RA), su 2% lento fija el p99 en ~1.24 s. Para incluirla
+   se pide al proveedor una idempotency key, sin ella p99 ~1.3 s.
+2. Si un proveedor se degrada por completo el hedge no ayuda
+   (escenario E, p99 1.47 → 1.33 s). Se monitorea la tasa de copias
+   por servicio y el budget mantiene la carga en ≤ 3x.
+3. Las copias son llamadas reales a terceros (+105%). Si un proveedor
+   cobra por consulta, ese servicio usa el Modo A (x1.07, p99 66 ms).
