@@ -47,8 +47,6 @@ El diagrama compara el **baseline** con los **dos modos** de la propuesta, con u
 
 ### 1.2 ¿Qué cambiaríamos?
 
-> **Propuesta final después del experimento:** **double+hedge-p95**, que combina los dos modos de abajo. Cada lectura sale con 2 copias en t = 0 (Modo B) y, si ninguna respondió al p95 observado del servicio, se manda una 3ª copia (Modo A). Con carga x2.05 baja el p99 de 1.47 s a 41.5 ms y el p99.9 de 1.50 s a 64.4 ms. La comparación contra el baseline y los dos modos está en la sección 3.
-
 No tocamos los servicios. Cambiamos **cómo los llama nuestra API**: agregamos un **Hedging Client** entre el fan-out y los servicios.
 
 El Hedging Client tiene **dos modos**, que comparamos en el experimento:
